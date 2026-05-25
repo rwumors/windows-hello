@@ -1,6 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: ============================================================
 ::  WinPE Recovery Tool
 echo ============================================================
 echo   WinPE Recovery Tool
@@ -28,14 +29,16 @@ for %%d in (C D E F G H I) do (
         set "OsDrive=%%d:"
     )
 )
-if not defined OsDrive (
-    echo [ERROR] Could not locate a Windows installation on any drive.
-    echo         Connect the drive and re-run, or manually set OsDrive.
-    pause
-    exit /b 1
+if defined OsDrive (
+    echo [INFO] Windows found on %OsDrive%
+) else (
+    echo [WARN] Could not auto-detect Windows drive (drive may be BitLocker locked).
+    set "OsDrive=C:"
+    set /p "OsDrive=Enter drive letter [default: C:]: "
+    set "OsDrive=%OsDrive::=%"
+    set "OsDrive=!OsDrive!:"
+    echo [INFO] Using drive !OsDrive!
 )
-echo [INFO] Windows found on %OsDrive%
-
 if "%Mode%"=="1" goto check_bitlocker_fix
 if "%Mode%"=="2" goto check_bitlocker_revert
 
