@@ -21,24 +21,7 @@ exit /b 1
 ::  Scans common letters for a live Windows SOFTWARE hive.
 ::  Avoids assuming C: which is often wrong under WinPE.
 :detect_drive
-echo.
-echo Detecting Windows installation drive...
-set "OsDrive="
-for %%d in (C D E F G H I) do (
-    if exist "%%d:\Windows\System32\config\SOFTWARE" (
-        set "OsDrive=%%d:"
-    )
-)
-if defined OsDrive (
-    echo [INFO] Windows found on %OsDrive%
-) else (
-    echo [WARN] Could not auto-detect Windows drive (drive may be BitLocker locked).
-    set "OsDrive=C:"
-    set /p "OsDrive=Enter drive letter [default: C:]: "
-    set "OsDrive=%OsDrive::=%"
-    set "OsDrive=!OsDrive!:"
-    echo [INFO] Using drive !OsDrive!
-)
+set "OsDrive=C:"
 if "%Mode%"=="1" goto check_bitlocker_fix
 if "%Mode%"=="2" goto check_bitlocker_revert
 
